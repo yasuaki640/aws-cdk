@@ -1,3 +1,6 @@
+import * as codecommit from '../../aws-codecommit';
+import * as iam from '../../aws-iam';
+import * as s3 from '../../aws-s3';
 import { Construct } from 'constructs';
 import { CfnProject } from './codebuild.generated';
 import { IProject } from './project';
@@ -8,9 +11,6 @@ import {
   GITHUB_SOURCE_TYPE,
   S3_SOURCE_TYPE,
 } from './source-types';
-import * as codecommit from '../../aws-codecommit';
-import * as iam from '../../aws-iam';
-import * as s3 from '../../aws-s3';
 
 /**
  * The type returned from `ISource#bind`.

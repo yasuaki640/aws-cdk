@@ -1,5 +1,5 @@
-import { Construct } from 'constructs';
 import * as logs from '../../aws-logs';
+import { Construct } from 'constructs';
 
 /**
  * Retry options for all AWS API calls.

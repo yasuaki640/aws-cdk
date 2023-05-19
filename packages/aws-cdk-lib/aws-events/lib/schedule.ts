@@ -1,5 +1,5 @@
-import { Construct } from 'constructs';
 import { Annotations, Duration } from '../../core';
+import { Construct } from 'constructs';
 
 /**
  * Schedule for scheduled event rules

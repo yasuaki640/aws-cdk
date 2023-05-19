@@ -1,3 +1,5 @@
+import * as cloudwatch from '../../aws-cloudwatch';
+import { Fn, Lazy, RemovalPolicy } from '../../core';
 import { Construct } from 'constructs';
 import { Alias, AliasOptions } from './alias';
 import { Architecture } from './architecture';
@@ -6,8 +8,6 @@ import { Function } from './function';
 import { IFunction, QualifiedFunctionBase } from './function-base';
 import { CfnVersion } from './lambda.generated';
 import { addAlias } from './util';
-import * as cloudwatch from '../../aws-cloudwatch';
-import { Fn, Lazy, RemovalPolicy } from '../../core';
 
 export interface IVersion extends IFunction {
   /**

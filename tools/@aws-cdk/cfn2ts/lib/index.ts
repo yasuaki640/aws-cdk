@@ -74,22 +74,15 @@ export interface GenerateAllOptions extends CodeGeneratorOptions, AugmentationsG
 }
 
 /**
- * A data structure holding information about a generated module.
- */
-export interface ModuleMapEntry {
-  name: string;
-  definition?: pkglint.ModuleDefinition;
-  scopes: string[];
-  resources: Record<string, string>;
-  files: string[];
-}
-
-/**
- * A data structure holding information about generated modules.
- * It maps module names to their full module definition, CFN scopes, resources and generated files.
+ * A data structure holding information about generated modules. It maps
+ * module names to their full module definition and their CFN scopes.
  */
 export interface ModuleMap {
-  [moduleName: string]: ModuleMapEntry
+  [moduleName: string]: {
+    module?: pkglint.ModuleDefinition;
+    scopes: string[];
+    resources: Record<string, string>;
+  }
 }
 
 /**
@@ -104,41 +97,72 @@ export async function generateAll(
   outPath: string,
   { scopeMapPath, ...options }: GenerateAllOptions,
 ): Promise<ModuleMap> {
-  const cfnScopes = cfnSpec.namespaces();
+  const scopes = cfnSpec.namespaces();
   const moduleMap = await readScopeMap(scopeMapPath);
 
   // Make sure all scopes have their own dedicated package/namespace.
   // Adds new submodules for new namespaces.
-  for (const scope of cfnScopes) {
-    const moduleDefinition = pkglint.createModuleDefinitionFromCfnNamespace(scope);
-    const currentScopes = moduleMap[moduleDefinition.moduleName]?.scopes ?? [];
+  for (const scope of scopes) {
+    const module = pkglint.createModuleDefinitionFromCfnNamespace(scope);
+    const currentScopes = moduleMap[module.moduleName]?.scopes ?? [];
     // remove dupes
     const newScopes = [...new Set([...currentScopes, scope])];
 
     // Add new modules to module map and return to caller
-    moduleMap[moduleDefinition.moduleName] = {
-      name: moduleDefinition.moduleName,
-      definition: moduleDefinition,
+    moduleMap[module.moduleName] = {
       scopes: newScopes,
+      module,
       resources: {},
-      files: [],
     };
   }
 
   await Promise.all(Object.entries(moduleMap).map(
-    async ([name, { scopes }]) => {
-      const packagePath = path.join(outPath, name);
+    async ([moduleName, { scopes: moduleScopes, module }]) => {
+      const packagePath = path.join(outPath, moduleName);
       const sourcePath = path.join(packagePath, 'lib');
 
-      const isCore = name === 'core';
-      const { outputFiles, resources } = await generate(scopes, sourcePath, {
+      const isCore = moduleName === 'core';
+      const { outputFiles, resources } = await generate(moduleScopes, sourcePath, {
         ...options,
         coreImport: isCore ? '.' : options.coreImport,
       });
 
-      // Add generated resources and files to module in map
-      moduleMap[name].resources = resources;
-      moduleMap[name].files = outputFiles;
+      if (!fs.existsSync(path.join(packagePath, 'index.ts'))) {
+        let lines = moduleScopes.map((s: string) => `// ${s} Cloudformation Resources`);
+        lines.push(...outputFiles.map((f) => `export * from './lib/${f.replace('.ts', '')}'`));
+
+        await fs.writeFile(path.join(packagePath, 'index.ts'), lines.join('\n') + '\n');
+      }
+
+      // Create .jsiirc.json file if needed
+      if (
+        !fs.existsSync(path.join(packagePath, '.jsiirc.json'))
+        && !isCore
+      ) {
+        if (!module) {
+          throw new Error(
+            `Cannot infer path or namespace for submodule named "${moduleName}". Manually create ${packagePath}/.jsiirc.json file.`,
+          );
+        }
+
+        const jsiirc = {
+          targets: {
+            java: {
+              package: module.javaPackage,
+            },
+            dotnet: {
+              package: module.dotnetPackage,
+            },
+            python: {
+              module: module.pythonModuleName,
+            },
+          },
+        };
+        await fs.writeJson(path.join(packagePath, '.jsiirc.json'), jsiirc, { spaces: 2 });
+      }
+
+      // Add generated resources to module in map
+      moduleMap[moduleName].resources = resources;
     }));
 
   return moduleMap;
@@ -174,12 +198,7 @@ async function readScopeMap(filepath: string) : Promise<ModuleMap> {
     .reduce((accum, [name, moduleScopes]) => {
       return {
         ...accum,
-        [name]: {
-          name,
-          scopes: moduleScopes,
-          resources: {},
-          files: [],
-        },
+        [name]: { scopes: moduleScopes },
       };
     }, {});
 }

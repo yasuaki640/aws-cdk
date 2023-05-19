@@ -1,3 +1,5 @@
+import { IPrincipal, IRole, PolicyStatement } from '../../aws-iam';
+import { CfnOutput, Resource, Stack } from '../../core';
 import { Construct } from 'constructs';
 import { AmazonLinuxGeneration, InstanceArchitecture, InstanceClass, InstanceSize, InstanceType } from '.';
 import { CloudFormationInit } from './cfn-init';
@@ -9,8 +11,6 @@ import { Port } from './port';
 import { ISecurityGroup } from './security-group';
 import { BlockDevice } from './volume';
 import { IVpc, SubnetSelection } from './vpc';
-import { IPrincipal, IRole, PolicyStatement } from '../../aws-iam';
-import { CfnOutput, Resource, Stack } from '../../core';
 
 /**
  * Properties of the bastion host

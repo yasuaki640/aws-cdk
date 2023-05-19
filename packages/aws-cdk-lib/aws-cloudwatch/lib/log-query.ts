@@ -1,5 +1,5 @@
-import { ConcreteWidget } from './widget';
 import * as cdk from '../../core';
+import { ConcreteWidget } from './widget';
 
 /**
  * Types of view

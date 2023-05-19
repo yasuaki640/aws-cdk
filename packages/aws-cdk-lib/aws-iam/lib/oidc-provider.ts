@@ -1,5 +1,4 @@
 import * as path from 'path';
-import { Construct } from 'constructs';
 import {
   Arn,
   CustomResource,
@@ -9,6 +8,7 @@ import {
   Resource,
   Token,
 } from '../../core';
+import { Construct } from 'constructs';
 
 const RESOURCE_TYPE = 'Custom::AWSCDKOpenIdConnectProvider';
 

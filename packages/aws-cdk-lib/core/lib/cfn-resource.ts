@@ -1,3 +1,4 @@
+import * as cxapi from '../../cx-api';
 import { Annotations } from './annotations';
 import { CfnCondition } from './cfn-condition';
 // import required to be here, otherwise causes a cycle when running the generated JavaScript
@@ -15,7 +16,6 @@ import { Tokenization } from './token';
 import { capitalizePropertyNames, ignoreEmpty, PostResolveToken } from './util';
 import { FeatureFlags } from './feature-flags';
 import { ResolutionTypeHint } from './type-hints';
-import * as cxapi from '../../cx-api';
 
 export interface CfnResourceProps {
   /**

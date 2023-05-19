@@ -13,14 +13,6 @@ const sortJson = require('sort-json');
 
 export interface PatchOptions {
   readonly quiet?: boolean;
-  /**
-   * Strict patching mode.
-   * Will fail if a patch can't be applied.
-   * Set to `false` to silently ignore any errors.
-   *
-   * @default true
-   */
-  readonly strict?: boolean;
 }
 
 export type PatchSet = Record<string, PatchSetElement>;
@@ -69,7 +61,7 @@ export function evaluatePatchSet(sources: PatchSet, options: PatchOptions = {}) 
         merge(targetObject, value.data, []);
         break;
       case 'patch':
-        patch(targetObject, value.data, (m) => log(`${key}: ${m}`), options.strict);
+        patch(targetObject, value.data, (m) => log(`${key}: ${m}`));
         break;
       case 'set':
         const evaluated = evaluatePatchSet(value.sources, options);
@@ -144,7 +136,7 @@ function merge(target: any, fragment: any, jsonPath: string[]) {
   }
 }
 
-function patch(target: any, fragment: any, log: (x: string) => void, strict: boolean = true) {
+function patch(target: any, fragment: any, log: (x: string) => void) {
   if (!fragment) { return; }
 
   const patches = findPatches(target, fragment);
@@ -154,11 +146,7 @@ function patch(target: any, fragment: any, log: (x: string) => void, strict: boo
     try {
       fastJsonPatch.applyPatch(target, p.operations);
     } catch (e: any) {
-      const msg = `error applying patch: ${JSON.stringify(p, undefined, 2)}: ${e.message}`;
-      if (strict) {
-        throw new Error(msg);
-      }
-      log('!!!!! ' + msg);
+      throw new Error(`error applying patch: ${JSON.stringify(p, undefined, 2)}: ${e.message}`);
     }
   }
 }

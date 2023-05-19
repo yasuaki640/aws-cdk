@@ -21,11 +21,11 @@ async function main() {
   const outputFile = path.join(outDir, 'specification.json');
   if (process.env.CODEBUILD_WEBHOOK_TRIGGER?.startsWith('pr/')) {
     await validateSpecificationEvolution(async () => {
-      await generateResourceSpecification(inputDir, outputFile, true);
+      await generateResourceSpecification(inputDir, outputFile);
       return fs.readJson(outputFile);
     });
   } else {
-    await generateResourceSpecification(inputDir, outputFile, false);
+    await generateResourceSpecification(inputDir, outputFile);
   }
 
   await applyAndWrite(path.join(outDir, 'cfn-lint.json'), path.join(inputDir, 'cfn-lint'));
@@ -35,12 +35,10 @@ async function main() {
 /**
  * Generate CloudFormation resource specification from sources and patches
  */
-async function generateResourceSpecification(inputDir: string, outFile: string, failOnError = true) {
+async function generateResourceSpecification(inputDir: string, outFile: string) {
   const spec: schema.Specification = { PropertyTypes: {}, ResourceTypes: {}, Fingerprint: '' };
 
-  Object.assign(spec, await applyPatchSet(path.join(inputDir, 'specification'), {
-    strict: failOnError,
-  }));
+  Object.assign(spec, await applyPatchSet(path.join(inputDir, 'specification')));
   massageSpec(spec);
   spec.Fingerprint = md5(JSON.stringify(normalize(spec)));
 

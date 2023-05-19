@@ -1,5 +1,5 @@
-import { IAlarmAction } from './alarm-action';
 import { IResource, Resource } from '../../core';
+import { IAlarmAction } from './alarm-action';
 
 /**
  * Interface for Alarm Rule.

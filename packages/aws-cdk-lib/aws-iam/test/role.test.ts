@@ -1,7 +1,7 @@
-import { testDeprecated } from '@aws-cdk/cdk-build-tools';
-import { Construct } from 'constructs';
 import { Template, Match, Annotations } from '../../assertions';
+import { testDeprecated } from '@aws-cdk/cdk-build-tools';
 import { Duration, Stack, App, CfnResource, RemovalPolicy, Lazy, Stage, DefaultStackSynthesizer, CliCredentialsStackSynthesizer, PERMISSIONS_BOUNDARY_CONTEXT_KEY, PermissionsBoundary } from '../../core';
+import { Construct } from 'constructs';
 import { AnyPrincipal, ArnPrincipal, CompositePrincipal, FederatedPrincipal, ManagedPolicy, PolicyStatement, Role, ServicePrincipal, User, Policy, PolicyDocument, Effect } from '../lib';
 
 describe('isRole() returns', () => {

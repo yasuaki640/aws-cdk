@@ -1,6 +1,3 @@
-import { Node } from 'constructs';
-import { CodePipelineActionFactoryResult, ProduceActionOptions, ICodePipelineActionFactory } from './codepipeline-action-factory';
-import { makeCodePipelineOutput } from './private/outputs';
 import * as codecommit from '../../../aws-codecommit';
 import * as cp from '../../../aws-codepipeline';
 import { Artifact } from '../../../aws-codepipeline';
@@ -10,6 +7,9 @@ import { IRepository } from '../../../aws-ecr';
 import * as iam from '../../../aws-iam';
 import { IBucket } from '../../../aws-s3';
 import { Fn, SecretValue, Token } from '../../../core';
+import { Node } from 'constructs';
+import { CodePipelineActionFactoryResult, ProduceActionOptions, ICodePipelineActionFactory } from './codepipeline-action-factory';
+import { makeCodePipelineOutput } from './private/outputs';
 import { FileSet, Step } from '../blueprint';
 
 /**

@@ -1,4 +1,3 @@
-import { Construct } from 'constructs';
 import { IVpc } from '../../../aws-ec2';
 import {
   AwsLogDriver, BaseService, CloudMapOptions, Cluster, ContainerImage, DeploymentController, DeploymentCircuitBreaker,
@@ -9,6 +8,7 @@ import { IRole } from '../../../aws-iam';
 import { ARecord, CnameRecord, IHostedZone, RecordTarget } from '../../../aws-route53';
 import { LoadBalancerTarget } from '../../../aws-route53-targets';
 import * as cdk from '../../../core';
+import { Construct } from 'constructs';
 
 /**
  * Describes the type of DNS record the service should create

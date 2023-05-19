@@ -1,9 +1,9 @@
-import { IClusterEngine } from './cluster-engine';
-import { Endpoint } from './endpoint';
-import { DatabaseProxy, DatabaseProxyOptions } from './proxy';
 import * as ec2 from '../../aws-ec2';
 import * as secretsmanager from '../../aws-secretsmanager';
 import { IResource } from '../../core';
+import { IClusterEngine } from './cluster-engine';
+import { Endpoint } from './endpoint';
+import { DatabaseProxy, DatabaseProxyOptions } from './proxy';
 
 /**
  * Create a clustered database with a given number of instances.

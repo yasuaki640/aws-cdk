@@ -1,5 +1,5 @@
-import { Construct } from 'constructs';
 import * as cdk from '../../../core';
+import { Construct } from 'constructs';
 import { App } from '../../../core/lib';
 import { PipelineBase, IFileSetProducer, FileSet } from '../../lib';
 import { PIPELINE_ENV } from '../testhelpers';

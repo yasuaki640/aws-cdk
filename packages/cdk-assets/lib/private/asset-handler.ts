@@ -15,11 +15,6 @@ export interface IAssetHandler {
    * Publish the asset.
    */
   publish(): Promise<void>;
-
-  /**
-   * Return whether the asset already exists
-   */
-  isPublished(): Promise<boolean>;
 }
 
 export interface IHandlerHost {

@@ -47,9 +47,7 @@ test('sns destination', () => {
             'AWS:SourceAccount': { Ref: 'AWS::AccountId' },
             'AWS:SourceArn': {
               'Fn::Join': ['', [
-                'arn:',
-                { Ref: 'AWS::Partition' },
-                ':ses:',
+                'arn:aws:ses:',
                 { Ref: 'AWS::Region' },
                 ':',
                 { Ref: 'AWS::AccountId' },

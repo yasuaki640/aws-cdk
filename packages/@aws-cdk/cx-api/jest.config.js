@@ -4,7 +4,7 @@ module.exports = {
     coverageThreshold: {
         global: {
             ...baseConfig.coverageThreshold.global,
-            branches: 70,
+            branches: 75,
         },
     },
 };

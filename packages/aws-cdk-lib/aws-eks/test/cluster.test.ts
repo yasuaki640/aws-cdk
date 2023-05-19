@@ -1,9 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as cdk8s from 'cdk8s';
-import { Construct } from 'constructs';
-import * as YAML from 'yaml';
-import { testFixture, testFixtureNoVpc } from './util';
 import { Annotations, Match, Template } from '../../assertions';
 import * as asg from '../../aws-autoscaling';
 import * as ec2 from '../../aws-ec2';
@@ -11,6 +7,10 @@ import * as iam from '../../aws-iam';
 import * as kms from '../../aws-kms';
 import * as lambda from '../../aws-lambda';
 import * as cdk from '../../core';
+import * as cdk8s from 'cdk8s';
+import { Construct } from 'constructs';
+import * as YAML from 'yaml';
+import { testFixture, testFixtureNoVpc } from './util';
 import * as eks from '../lib';
 import { HelmChart } from '../lib';
 import { KubectlProvider } from '../lib/kubectl-provider';
@@ -1254,6 +1254,20 @@ describe('cluster', () => {
             '[{"apiVersion":"v1","kind":"ConfigMap","metadata":{"name":"aws-auth","namespace":"kube-system"},"data":{"mapRoles":"[{\\"rolearn\\":\\"',
             {
               'Fn::GetAtt': [
+                'ClusterMastersRole9AA35625',
+                'Arn',
+              ],
+            },
+            '\\",\\"username\\":\\"',
+            {
+              'Fn::GetAtt': [
+                'ClusterMastersRole9AA35625',
+                'Arn',
+              ],
+            },
+            '\\",\\"groups\\":[\\"system:masters\\"]},{\\"rolearn\\":\\"',
+            {
+              'Fn::GetAtt': [
                 'ClusterdefaultInstanceRoleF20A29CD',
                 'Arn',
               ],
@@ -1273,9 +1287,6 @@ describe('cluster', () => {
       defaultCapacity: 0,
       version: CLUSTER_VERSION,
       prune: false,
-      mastersRole: new iam.Role(stack, 'MastersRole', {
-        assumedBy: new iam.ArnPrincipal('arn:aws:iam:123456789012:user/user-name'),
-      }),
     });
 
     // WHEN
@@ -1293,14 +1304,14 @@ describe('cluster', () => {
             '[{"apiVersion":"v1","kind":"ConfigMap","metadata":{"name":"aws-auth","namespace":"kube-system"},"data":{"mapRoles":"[{\\"rolearn\\":\\"',
             {
               'Fn::GetAtt': [
-                'MastersRole0257C11B',
+                'ClusterMastersRole9AA35625',
                 'Arn',
               ],
             },
             '\\",\\"username\\":\\"',
             {
               'Fn::GetAtt': [
-                'MastersRole0257C11B',
+                'ClusterMastersRole9AA35625',
                 'Arn',
               ],
             },
@@ -1312,7 +1323,7 @@ describe('cluster', () => {
   });
 
   describe('outputs', () => {
-    test('no outputs are synthesized by default', () => {
+    test('aws eks update-kubeconfig is the only output synthesized by default', () => {
       // GIVEN
       const { app, stack } = testFixtureNoVpc();
 
@@ -1322,7 +1333,10 @@ describe('cluster', () => {
       // THEN
       const assembly = app.synth();
       const template = assembly.getStackByName(stack.stackName).template;
-      expect(template.Outputs).toBeUndefined(); // no outputs
+      expect(template.Outputs).toEqual({
+        ClusterConfigCommand43AAE40F: { Value: { 'Fn::Join': ['', ['aws eks update-kubeconfig --name ', { Ref: 'Cluster9EE0221C' }, ' --region us-east-1 --role-arn ', { 'Fn::GetAtt': ['ClusterMastersRole9AA35625', 'Arn'] }]] } },
+        ClusterGetTokenCommand06AE992E: { Value: { 'Fn::Join': ['', ['aws eks get-token --cluster-name ', { Ref: 'Cluster9EE0221C' }, ' --region us-east-1 --role-arn ', { 'Fn::GetAtt': ['ClusterMastersRole9AA35625', 'Arn'] }]] } },
+      });
     });
 
     test('if masters role is defined, it should be included in the config command', () => {
@@ -1815,7 +1829,12 @@ describe('cluster', () => {
               Action: 'sts:AssumeRole',
               Effect: 'Allow',
               Principal: {
-                Service: 'lambda.amazonaws.com',
+                AWS: {
+                  'Fn::Join': [
+                    '',
+                    ['arn:', { Ref: 'AWS::Partition' }, ':iam::', { Ref: 'AWS::AccountId' }, ':root'],
+                  ],
+                },
               },
             },
           ],
@@ -2022,7 +2041,8 @@ describe('cluster', () => {
       });
 
       // THEN
-      Template.fromStack(stack).hasCondition('MyClusterHasEcrPublicC68AA246', {
+      const providerStack = stack.node.tryFindChild('@aws-cdk/aws-eks.KubectlProvider') as cdk.NestedStack;
+      Template.fromStack(providerStack).hasCondition('HasEcrPublic', {
         'Fn::Equals': [
           {
             Ref: 'AWS::Partition',
@@ -2030,36 +2050,35 @@ describe('cluster', () => {
           'aws',
         ],
       });
-
-      Template.fromStack(stack).hasResourceProperties('AWS::IAM::Policy', {
+      Template.fromStack(providerStack).hasResourceProperties('AWS::IAM::Policy', {
         PolicyDocument: {
           Statement: [
             {
               Action: 'eks:DescribeCluster',
               Effect: 'Allow',
               Resource: {
-                'Fn::GetAtt': ['MyCluster8AD82BF8', 'Arn'],
+                Ref: 'referencetoStackMyClusterD33CAEABArn',
               },
             },
             {
               Action: 'sts:AssumeRole',
               Effect: 'Allow',
               Resource: {
-                'Fn::GetAtt': ['MyClusterCreationRoleB5FA4FF3', 'Arn'],
+                Ref: 'referencetoStackMyClusterCreationRoleA67486E4Arn',
               },
             },
           ],
           Version: '2012-10-17',
         },
-        PolicyName: 'MyClusterKubectlHandlerRoleDefaultPolicy7FB0AE53',
+        PolicyName: 'HandlerServiceRoleDefaultPolicyCBD0CC91',
         Roles: [
           {
-            Ref: 'MyClusterKubectlHandlerRole42303817',
+            Ref: 'HandlerServiceRoleFCDC14AE',
           },
         ],
       });
 
-      Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+      Template.fromStack(providerStack).hasResourceProperties('AWS::IAM::Role', {
         AssumeRolePolicyDocument: {
           Statement: [
             {
@@ -2094,7 +2113,7 @@ describe('cluster', () => {
           },
           {
             'Fn::If': [
-              'MyClusterHasEcrPublicC68AA246',
+              'HasEcrPublic',
               {
                 'Fn::Join': [
                   '',
@@ -2250,27 +2269,22 @@ describe('cluster', () => {
       c1.addManifest('c1b', { foo: 123 });
 
       // THEN
-      Template.fromStack(stack).hasResourceProperties('AWS::IAM::Policy', {
+      const providerStack = stack.node.tryFindChild('@aws-cdk/aws-eks.KubectlProvider') as cdk.NestedStack;
+      Template.fromStack(providerStack).hasResourceProperties('AWS::IAM::Policy', {
         PolicyDocument: {
           Statement: [
             {
               Action: 'eks:DescribeCluster',
               Effect: 'Allow',
               Resource: {
-                'Fn::GetAtt': [
-                  'Cluster1B02DD5A2',
-                  'Arn',
-                ],
+                Ref: 'referencetoStackCluster18DFEAC17Arn',
               },
             },
             {
               Action: 'sts:AssumeRole',
               Effect: 'Allow',
               Resource: {
-                'Fn::GetAtt': [
-                  'Cluster1CreationRoleA231BE8D',
-                  'Arn',
-                ],
+                Ref: 'referencetoStackCluster1CreationRoleEF7C9BBCArn',
               },
             },
           ],
@@ -2278,7 +2292,7 @@ describe('cluster', () => {
         },
       });
 
-      Template.fromStack(stack).hasResourceProperties('AWS::IAM::Role', {
+      Template.fromStack(providerStack).hasResourceProperties('AWS::IAM::Role', {
         AssumeRolePolicyDocument: {
           Statement: [
             {
@@ -2313,7 +2327,7 @@ describe('cluster', () => {
           },
           {
             'Fn::If': [
-              'Cluster1HasEcrPublicC08E47E3',
+              'HasEcrPublic',
               {
                 'Fn::Join': [
                   '',
@@ -2391,7 +2405,7 @@ describe('cluster', () => {
     });
   });
 
-  describe('kubectl provider passes iam role environment to kube ctl lambda', () => {
+  describe('kubectl provider passes iam role environment to kube ctl lambda', ()=>{
     test('new cluster', () => {
       const { stack } = testFixture();
 
@@ -2427,7 +2441,7 @@ describe('cluster', () => {
       });
     });
 
-    test('imported cluster', () => {
+    test('imported cluster', ()=> {
       const clusterName = 'my-cluster';
       const stack = new cdk.Stack();
       const kubectlLambdaRole = new iam.Role(stack, 'KubectlLambdaRole', {
@@ -3071,7 +3085,7 @@ describe('cluster', () => {
     }
 
     test('not added when version < 1.22 and no kubectl layer provided', () => {
-      // GIVEN
+    // GIVEN
       const { stack } = testFixture();
 
       // WHEN
@@ -3085,7 +3099,7 @@ describe('cluster', () => {
     });
 
     test('added when version >= 1.22 and no kubectl layer provided', () => {
-      // GIVEN
+    // GIVEN
       const { stack } = testFixture();
 
       // WHEN

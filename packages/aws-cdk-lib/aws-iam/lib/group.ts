@@ -1,3 +1,4 @@
+import { Annotations, ArnFormat, Lazy, Resource, Stack } from '../../core';
 import { Construct } from 'constructs';
 import { CfnGroup } from './iam.generated';
 import { IIdentity } from './identity-base';
@@ -7,7 +8,6 @@ import { PolicyStatement } from './policy-statement';
 import { AddToPrincipalPolicyResult, ArnPrincipal, IPrincipal, PrincipalPolicyFragment } from './principals';
 import { AttachedPolicies } from './private/util';
 import { IUser } from './user';
-import { Annotations, ArnFormat, Lazy, Resource, Stack } from '../../core';
 
 /**
  * Represents an IAM Group.

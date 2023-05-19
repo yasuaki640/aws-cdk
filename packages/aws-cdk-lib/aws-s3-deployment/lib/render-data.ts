@@ -1,5 +1,5 @@
-import { Construct } from 'constructs';
 import { Stack } from '../../core';
+import { Construct } from 'constructs';
 
 export interface Content {
   readonly text: string;

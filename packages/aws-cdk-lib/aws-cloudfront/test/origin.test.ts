@@ -1,5 +1,5 @@
-import { TestOrigin } from './test-origin';
 import { App, Stack, Duration } from '../../core';
+import { TestOrigin } from './test-origin';
 
 let app: App;
 let stack: Stack;

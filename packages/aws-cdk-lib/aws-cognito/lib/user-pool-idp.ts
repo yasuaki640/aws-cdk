@@ -1,5 +1,5 @@
-import { Construct } from 'constructs';
 import { IResource, Resource } from '../../core';
+import { Construct } from 'constructs';
 
 /**
  * Represents a UserPoolIdentityProvider

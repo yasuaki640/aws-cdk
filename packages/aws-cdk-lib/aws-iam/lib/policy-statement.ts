@@ -1,3 +1,4 @@
+import * as cdk from '../../core';
 import { IConstruct } from 'constructs';
 import { Group } from './group';
 import {
@@ -6,7 +7,6 @@ import {
 } from './principals';
 import { normalizeStatement } from './private/postprocess-policy-document';
 import { LITERAL_STRING_KEY, mergePrincipal, sum } from './private/util';
-import * as cdk from '../../core';
 
 const ensureArrayOrUndefined = (field: any) => {
   if (field === undefined) {

@@ -1,5 +1,5 @@
-import { Construct, IConstruct } from 'constructs';
 import * as cxschema from '../../cloud-assembly-schema';
+import { Construct, IConstruct } from 'constructs';
 import { App } from '../lib';
 import { IAspect, Aspects } from '../lib/aspect';
 

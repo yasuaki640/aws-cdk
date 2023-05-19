@@ -1,5 +1,4 @@
 import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
-import * as kms from 'aws-cdk-lib/aws-kms';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cdk from 'aws-cdk-lib';
 import { Duration } from 'aws-cdk-lib';
@@ -10,15 +9,10 @@ const app = new cdk.App();
 
 const stack = new cdk.Stack(app, 'aws-cdk-codepipeline-s3-deploy');
 
-const key: kms.IKey = new kms.Key(stack, 'EnvVarEncryptKey', {
-  description: 'sample key',
-});
-
 const bucket = new s3.Bucket(stack, 'PipelineBucket', {
   versioned: true,
   removalPolicy: cdk.RemovalPolicy.DESTROY,
   autoDeleteObjects: true,
-  encryptionKey: key,
 });
 const sourceOutput = new codepipeline.Artifact('SourceArtifact');
 const sourceAction = new cpactions.S3SourceAction({
@@ -59,7 +53,6 @@ const pipeline = new codepipeline.Pipeline(stack, 'Pipeline', {
             cpactions.CacheControl.setPublic(),
             cpactions.CacheControl.maxAge(cdk.Duration.hours(12)),
           ],
-          encryptionKey: key,
         }),
       ],
     },
@@ -81,31 +74,11 @@ const integ = new IntegTest(app, 's3-deploy-test', {
   testCases: [stack],
 });
 
-const getObjectCall = integ.assertions.awsApiCall('S3', 'getObject', {
-  Bucket: deployBucket.bucketName,
-  Key: 'key',
-});
-
-getObjectCall.provider.addToRolePolicy({
-  Effect: 'Allow',
-  Action: ['kms:Decrypt'],
-  Resource: ['*'],
-});
-
-
-const putObjectCall = integ.assertions.awsApiCall('S3', 'putObject', {
+integ.assertions.awsApiCall('S3', 'putObject', {
   Bucket: bucket.bucketName,
   Key: 'key',
   Body: 'HelloWorld',
-});
-
-putObjectCall.provider.addToRolePolicy({
-  Effect: 'Allow',
-  Action: ['kms:GenerateDataKey'],
-  Resource: ['*'],
-});
-
-putObjectCall.next(
+}).next(
   integ.assertions.awsApiCall('CodePipeline', 'getPipelineState', {
     name: pipeline.pipelineName,
   }).expect(ExpectedResult.objectLike({
@@ -119,7 +92,12 @@ putObjectCall.next(
     ]),
   })).waitForAssertions({
     totalTimeout: Duration.minutes(5),
-  }).next(getObjectCall),
+  }).next(
+    integ.assertions.awsApiCall('S3', 'getObject', {
+      Bucket: deployBucket.bucketName,
+      Key: 'key',
+    }),
+  ),
 );
 
 app.synth();

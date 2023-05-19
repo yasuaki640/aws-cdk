@@ -1,4 +1,5 @@
 import * as crypto from 'crypto';
+import * as cxapi from '../../cx-api';
 import { Construct, Node } from 'constructs';
 import { FileAssetPackaging } from './assets';
 import { Fn } from './cfn-fn';
@@ -13,7 +14,6 @@ import { IResolveContext } from './resolvable';
 import { Stack } from './stack';
 import { NestedStackSynthesizer } from './stack-synthesizers';
 import { Token } from './token';
-import * as cxapi from '../../cx-api';
 
 const NESTED_STACK_SYMBOL = Symbol.for('@aws-cdk/core.NestedStack');
 

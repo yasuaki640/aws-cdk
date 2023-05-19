@@ -1,14 +1,5 @@
-
-import { Construct } from 'constructs';
-import { Connections, IConnectable } from './connections';
-import { CfnLaunchTemplate } from './ec2.generated';
-import { InstanceType } from './instance-types';
-import { IMachineImage, MachineImageConfig, OperatingSystemType } from './machine-image';
-import { launchTemplateBlockDeviceMappings } from './private/ebs-util';
-import { ISecurityGroup } from './security-group';
-import { UserData } from './user-data';
-import { BlockDevice } from './volume';
 import * as iam from '../../aws-iam';
+
 import {
   Annotations,
   Duration,
@@ -24,6 +15,15 @@ import {
   FeatureFlags,
 } from '../../core';
 import * as cxapi from '../../cx-api';
+import { Construct } from 'constructs';
+import { Connections, IConnectable } from './connections';
+import { CfnLaunchTemplate } from './ec2.generated';
+import { InstanceType } from './instance-types';
+import { IMachineImage, MachineImageConfig, OperatingSystemType } from './machine-image';
+import { launchTemplateBlockDeviceMappings } from './private/ebs-util';
+import { ISecurityGroup } from './security-group';
+import { UserData } from './user-data';
+import { BlockDevice } from './volume';
 
 /**
  * Name tag constant

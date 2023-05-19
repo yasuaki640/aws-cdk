@@ -1,3 +1,5 @@
+import { FeatureFlags, IResource, Lazy, Names, Resource, Token } from '../../core';
+import { APIGATEWAY_USAGEPLANKEY_ORDERINSENSITIVE_ID } from '../../cx-api';
 import { Construct } from 'constructs';
 import { IApiKey } from './api-key';
 import { CfnUsagePlan, CfnUsagePlanKey } from './apigateway.generated';
@@ -5,8 +7,6 @@ import { Method } from './method';
 import { IRestApi } from './restapi';
 import { Stage } from './stage';
 import { validateDouble, validateInteger } from './util';
-import { FeatureFlags, IResource, Lazy, Names, Resource, Token } from '../../core';
-import { APIGATEWAY_USAGEPLANKEY_ORDERINSENSITIVE_ID } from '../../cx-api';
 
 /**
  * Container for defining throttling parameters to API stages or methods.

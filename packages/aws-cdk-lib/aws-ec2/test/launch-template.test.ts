@@ -1,4 +1,3 @@
-import { stringLike } from './util';
 import { Annotations, Template, Match } from '../../assertions';
 import {
   CfnInstanceProfile,
@@ -14,6 +13,7 @@ import {
   Tags,
 } from '../../core';
 import * as cxapi from '../../cx-api';
+import { stringLike } from './util';
 import {
   AmazonLinuxImage,
   BlockDevice,

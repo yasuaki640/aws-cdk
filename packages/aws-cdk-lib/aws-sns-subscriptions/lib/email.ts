@@ -1,5 +1,5 @@
-import { SubscriptionProps } from './subscription';
 import * as sns from '../../aws-sns';
+import { SubscriptionProps } from './subscription';
 
 /**
  * Options for email subscriptions.

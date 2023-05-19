@@ -1,5 +1,5 @@
-import { Construct } from 'constructs';
 import * as ec2 from '../../aws-ec2';
+import { Construct } from 'constructs';
 import * as elbv2 from '../lib';
 
 export class FakeSelfRegisteringTarget extends Construct implements elbv2.IApplicationLoadBalancerTarget, elbv2.INetworkLoadBalancerTarget,

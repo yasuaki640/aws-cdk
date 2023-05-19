@@ -1,5 +1,5 @@
-import { dropUndefined } from './object';
 import * as cdk from '../../../core';
+import { dropUndefined } from './object';
 
 /**
  * A Token object that will drop the last element of an array if it is an empty object

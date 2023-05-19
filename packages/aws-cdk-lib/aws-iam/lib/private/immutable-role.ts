@@ -1,5 +1,5 @@
-import { Construct, Dependable, DependencyGroup } from 'constructs';
 import { Resource } from '../../../core';
+import { Construct, Dependable, DependencyGroup } from 'constructs';
 import { Grant } from '../grant';
 import { IManagedPolicy } from '../managed-policy';
 import { Policy } from '../policy';

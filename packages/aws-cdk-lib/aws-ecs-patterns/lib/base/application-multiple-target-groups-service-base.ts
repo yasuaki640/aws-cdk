@@ -1,4 +1,3 @@
-import { Construct } from 'constructs';
 import { Certificate, CertificateValidation, ICertificate } from '../../../aws-certificatemanager';
 import { IVpc } from '../../../aws-ec2';
 import {
@@ -17,6 +16,7 @@ import { IRole } from '../../../aws-iam';
 import { ARecord, IHostedZone, RecordTarget } from '../../../aws-route53';
 import { LoadBalancerTarget } from '../../../aws-route53-targets';
 import { CfnOutput, Duration, Stack } from '../../../core';
+import { Construct } from 'constructs';
 
 /**
  * The properties for the base ApplicationMultipleTargetGroupsEc2Service or ApplicationMultipleTargetGroupsFargateService service.

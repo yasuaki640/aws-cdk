@@ -1,5 +1,5 @@
-import { Construct } from 'constructs';
 import * as iam from '../../aws-iam';
+import { Construct } from 'constructs';
 
 /**
  * Initialization properties for `OpenIdConnectProvider`.

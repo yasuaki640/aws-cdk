@@ -114,7 +114,7 @@ const node3 = mesh.addVirtualNode('node3', {
       },
     },
   },
-  accessLog: appmesh.AccessLog.fromFilePath('/dev/stdout', appmesh.LoggingFormat.fromText('test_pattern')),
+  accessLog: appmesh.AccessLog.fromFilePath('/dev/stdout'),
 });
 
 const node4 = mesh.addVirtualNode('node4', {
@@ -145,9 +145,7 @@ const node4 = mesh.addVirtualNode('node4', {
       },
     },
   },
-  accessLog: appmesh.AccessLog.fromFilePath('/dev/stdout',
-    appmesh.LoggingFormat.fromJson(
-      { testKey1: 'testValue1', testKey2: 'testValue2' })),
+  accessLog: appmesh.AccessLog.fromFilePath('/dev/stdout'),
 });
 
 node4.addBackend(appmesh.Backend.virtualService(

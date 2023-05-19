@@ -1,3 +1,4 @@
+import { Resource, IResource, Lazy, Fn } from '../../core';
 import { Construct } from 'constructs';
 import { CfnFunctionConfiguration } from './appsync.generated';
 import { Code } from './code';
@@ -5,7 +6,6 @@ import { BaseDataSource } from './data-source';
 import { IGraphqlApi } from './graphqlapi-base';
 import { MappingTemplate } from './mapping-template';
 import { FunctionRuntime } from './runtime';
-import { Resource, IResource, Lazy, Fn } from '../../core';
 
 /**
  * the base properties for AppSync Functions

@@ -1,5 +1,5 @@
-import { Construct, IConstruct } from 'constructs';
 import * as codepipeline from '../../../aws-codepipeline';
+import { Construct, IConstruct } from 'constructs';
 
 /**
  * A Jenkins provider.

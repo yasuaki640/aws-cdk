@@ -1,5 +1,5 @@
-import { IntrinsicParser, IntrinsicExpression } from './intrinstics';
 import { captureStackTrace, IResolvable, IResolveContext, Token, Tokenization } from '../../../core';
+import { IntrinsicParser, IntrinsicExpression } from './intrinstics';
 
 const JSON_PATH_TOKEN_SYMBOL = Symbol.for('@aws-cdk/aws-stepfunctions.JsonPathToken');
 

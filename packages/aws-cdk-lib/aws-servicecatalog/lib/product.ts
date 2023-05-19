@@ -1,3 +1,5 @@
+import { IBucket } from '../../aws-s3';
+import { ArnFormat, IResource, Resource, Stack } from '../../core';
 import { Construct } from 'constructs';
 import { CloudFormationTemplate } from './cloudformation-template';
 import { MessageLanguage } from './common';
@@ -5,8 +7,6 @@ import { AssociationManager } from './private/association-manager';
 import { InputValidator } from './private/validation';
 import { CfnCloudFormationProduct } from './servicecatalog.generated';
 import { TagOptions } from './tag-options';
-import { IBucket } from '../../aws-s3';
-import { ArnFormat, IResource, Resource, Stack } from '../../core';
 
 /**
  * A Service Catalog product, currently only supports type CloudFormationProduct

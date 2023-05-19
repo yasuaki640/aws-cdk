@@ -1,5 +1,5 @@
-import { describeDeprecated } from '@aws-cdk/cdk-build-tools';
 import * as codePipeline from '../../../aws-codepipeline';
+import { describeDeprecated } from '@aws-cdk/cdk-build-tools';
 import * as cdk from '../../../core';
 import * as cdkp from '../../lib';
 

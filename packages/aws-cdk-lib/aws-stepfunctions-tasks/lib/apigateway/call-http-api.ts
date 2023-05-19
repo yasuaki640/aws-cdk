@@ -1,9 +1,9 @@
-import { Construct } from 'constructs';
-import { CallApiGatewayEndpointBase } from './base';
-import { CallApiGatewayEndpointBaseProps } from './base-types';
 import * as iam from '../../../aws-iam';
 import * as sfn from '../../../aws-stepfunctions';
 import * as cdk from '../../../core';
+import { Construct } from 'constructs';
+import { CallApiGatewayEndpointBase } from './base';
+import { CallApiGatewayEndpointBaseProps } from './base-types';
 
 /**
  * Properties for calling an HTTP API Endpoint

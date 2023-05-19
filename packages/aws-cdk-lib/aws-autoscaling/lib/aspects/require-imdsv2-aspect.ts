@@ -1,5 +1,5 @@
-import { IConstruct } from 'constructs';
 import * as cdk from '../../../core';
+import { IConstruct } from 'constructs';
 import { AutoScalingGroup } from '../auto-scaling-group';
 import { CfnLaunchConfiguration } from '../autoscaling.generated';
 

@@ -1,5 +1,5 @@
-import { BaseLogDriverProps } from './base-log-driver';
 import { Duration, SecretValue, Token } from '../../../core';
+import { BaseLogDriverProps } from './base-log-driver';
 import { TaskDefinition } from '../base/task-definition';
 import { Secret } from '../container-definition';
 import { CfnTaskDefinition } from '../ecs.generated';

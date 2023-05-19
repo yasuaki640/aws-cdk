@@ -1,5 +1,3 @@
-import { Construct } from 'constructs';
-import { CfnTrail } from './cloudtrail.generated';
 import * as events from '../../aws-events';
 import * as iam from '../../aws-iam';
 import * as kms from '../../aws-kms';
@@ -8,6 +6,8 @@ import * as logs from '../../aws-logs';
 import * as s3 from '../../aws-s3';
 import * as sns from '../../aws-sns';
 import { Resource, Stack } from '../../core';
+import { Construct } from 'constructs';
+import { CfnTrail } from './cloudtrail.generated';
 
 /**
  * Properties for an AWS CloudTrail trail

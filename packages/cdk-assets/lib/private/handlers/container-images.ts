@@ -45,11 +45,6 @@ export class ContainerImageAssetHandler implements IAssetHandler {
     await dockerForBuilding.tag(localTagName, initOnce.imageUri);
   }
 
-  public async isPublished(): Promise<boolean> {
-    const initOnce = await this.initOnce();
-    return initOnce.destinationAlreadyExists;
-  }
-
   public async publish(): Promise<void> {
     const initOnce = await this.initOnce();
 

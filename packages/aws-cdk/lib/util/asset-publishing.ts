@@ -109,7 +109,7 @@ export async function buildAssets(
   }
 }
 
-export class PublishingAws implements cdk_assets.IAws {
+class PublishingAws implements cdk_assets.IAws {
   private sdkCache: Map<String, ISDK> = new Map();
 
   constructor(
@@ -186,7 +186,7 @@ export class PublishingAws implements cdk_assets.IAws {
   }
 }
 
-export const EVENT_TO_LOGGER: Record<cdk_assets.EventType, (x: string) => void> = {
+const EVENT_TO_LOGGER: Record<cdk_assets.EventType, (x: string) => void> = {
   build: debug,
   cached: debug,
   check: debug,

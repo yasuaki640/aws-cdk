@@ -1,4 +1,3 @@
-import { testDeprecated } from '@aws-cdk/cdk-build-tools';
 import { Match, Template } from '../../../assertions';
 import { AutoScalingGroup } from '../../../aws-autoscaling';
 import * as ec2 from '../../../aws-ec2';
@@ -7,6 +6,7 @@ import * as ecs from '../../../aws-ecs';
 import { AsgCapacityProvider } from '../../../aws-ecs';
 import * as sqs from '../../../aws-sqs';
 import { Queue } from '../../../aws-sqs';
+import { testDeprecated } from '@aws-cdk/cdk-build-tools';
 import * as cdk from '../../../core';
 import * as ecsPatterns from '../../lib';
 

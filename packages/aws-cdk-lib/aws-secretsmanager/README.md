@@ -12,12 +12,14 @@ To have SecretsManager generate a new secret value automatically,
 follow this example:
 
 ```ts
-declare const vpc: ec2.IVpc;
+declare const vpc: ec2.Vpc;
 
+// Simple secret
+const secret = new secretsmanager.Secret(this, 'Secret');
+// Using the secret
 const instance1 = new rds.DatabaseInstance(this, "PostgresInstance1", {
   engine: rds.DatabaseInstanceEngine.POSTGRES,
-  // Generate the secret with admin username `postgres` and random password
-  credentials: rds.Credentials.fromGeneratedSecret('postgres'),
+  credentials: rds.Credentials.fromSecret(secret),
   vpc
 });
 // Templated secret with username and password fields
@@ -25,7 +27,6 @@ const templatedSecret = new secretsmanager.Secret(this, 'TemplatedSecret', {
   generateSecretString: {
     secretStringTemplate: JSON.stringify({ username: 'postgres' }),
     generateStringKey: 'password',
-    excludeCharacters: '/@"',
   },
 });
 // Using the templated secret as credentials
@@ -133,7 +134,7 @@ MariaDB, SQLServer, Redshift and MongoDB (both for the single and multi user sch
 When deployed in a VPC, the hosted rotation implements `ec2.IConnectable`:
 
 ```ts
-declare const myVpc: ec2.IVpc;
+declare const myVpc: ec2.Vpc;
 declare const dbConnections: ec2.Connections;
 declare const secret: secretsmanager.Secret;
 

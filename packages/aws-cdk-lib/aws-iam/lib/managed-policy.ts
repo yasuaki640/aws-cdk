@@ -1,3 +1,5 @@
+import { ArnFormat, Resource, Stack, Arn, Aws } from '../../core';
+import { getCustomizeRolesConfig, PolicySynthesizer } from '../../core/lib/helpers-internal';
 import { Construct } from 'constructs';
 import { IGroup } from './group';
 import { CfnManagedPolicy } from './iam.generated';
@@ -7,8 +9,6 @@ import { AddToPrincipalPolicyResult, IGrantable, IPrincipal, PrincipalPolicyFrag
 import { undefinedIfEmpty } from './private/util';
 import { IRole } from './role';
 import { IUser } from './user';
-import { ArnFormat, Resource, Stack, Arn, Aws } from '../../core';
-import { getCustomizeRolesConfig, PolicySynthesizer } from '../../core/lib/helpers-internal';
 
 /**
  * A managed policy

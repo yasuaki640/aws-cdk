@@ -1,3 +1,6 @@
+import * as iam from '../../aws-iam';
+import * as cxschema from '../../cloud-assembly-schema';
+import { Aws, ContextProvider, IResource, Lazy, Resource, Stack, Token } from '../../core';
 import { Construct } from 'constructs';
 import { Connections, IConnectable } from './connections';
 import { CfnVPCEndpoint } from './ec2.generated';
@@ -6,9 +9,6 @@ import { Port } from './port';
 import { ISecurityGroup, SecurityGroup } from './security-group';
 import { allRouteTableIds, flatten } from './util';
 import { ISubnet, IVpc, SubnetSelection } from './vpc';
-import * as iam from '../../aws-iam';
-import * as cxschema from '../../cloud-assembly-schema';
-import { Aws, ContextProvider, IResource, Lazy, Resource, Stack, Token } from '../../core';
 
 /**
  * A VPC endpoint.
