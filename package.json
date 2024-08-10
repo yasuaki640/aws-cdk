@@ -176,5 +176,6 @@
   },
   "dependencies": {
     "string-width": "^4.2.3"
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }
