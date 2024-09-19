@@ -1,6 +1,15 @@
 import { Match, Template } from '../../assertions';
 import { Stack, Duration } from '../../core';
-import { OAuthScope, ResourceServerScope, UserPool, UserPoolClient, UserPoolClientIdentityProvider, UserPoolIdentityProvider, ClientAttributes } from '../lib';
+import {
+  OAuthScope,
+  ResourceServerScope,
+  UserPool,
+  UserPoolClient,
+  UserPoolClientIdentityProvider,
+  UserPoolIdentityProvider,
+  ClientAttributes,
+  AnalyticsConfigurationProperty,
+} from '../lib';
 
 describe('User Pool Client', () => {
   test('default setup', () => {
@@ -1339,4 +1348,27 @@ describe('User Pool Client', () => {
     ).toThrow(`defaultRedirectUri must match the \`^(?=.{1,1024}$)[\p{L}\p{M}\p{S}\p{N}\p{P}]+$\` pattern, got ${invalidUrl}`);
   });
 
+  test('AnalyticsConfigurationProperty can be set', () => {
+    // GIVEN
+    const stack = new Stack();
+    const pool = new UserPool(stack, 'Pool');
+
+    const analyticsConfiguration: AnalyticsConfigurationProperty = {
+      // TODO: いい感じにパラメータ追加
+      applicationArn: 'fuck',
+    };
+
+    // WHEN
+    new UserPoolClient(stack, 'PoolClient', {
+      userPool: pool,
+      analyticsConfiguration,
+    });
+
+    // THEN
+    Template.fromStack(stack).hasResourceProperties('AWS::Cognito::UserPoolClient', {
+      AnalyticsConfiguration: {
+        ApplicationArn: 'fuck',
+      },
+    });
+  });
 });

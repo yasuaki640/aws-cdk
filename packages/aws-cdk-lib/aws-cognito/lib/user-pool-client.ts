@@ -223,6 +223,54 @@ export class UserPoolClientIdentityProvider {
 }
 
 /**
+ * The Amazon Pinpoint analytics configuration necessary to collect metrics for a user pool.
+ *
+ * > In Regions where Amazon Pinpoint isn't available, user pools only support sending events to Amazon Pinpoint projects in us-east-1. In Regions where Amazon Pinpoint is available, user pools support sending events to Amazon Pinpoint projects within that same Region.
+ *
+ * @struct
+ * @stability external
+ * @see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html
+ */
+export interface AnalyticsConfigurationProperty {
+  /**
+   * The Amazon Resource Name (ARN) of an Amazon Pinpoint project.
+   *
+   * You can use the Amazon Pinpoint project for integration with the chosen user pool client. Amazon Cognito publishes events to the Amazon Pinpoint project that the app ARN declares.
+   *
+   * @see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-applicationarn
+   */
+  readonly applicationArn?: string;
+
+  /**
+   * The application ID for an Amazon Pinpoint application.
+   *
+   * @see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-applicationid
+   */
+  readonly applicationId?: string;
+
+  /**
+   * The external ID.
+   *
+   * @see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-externalid
+   */
+  readonly externalId?: string;
+
+  /**
+   * The ARN of an AWS Identity and Access Management role that authorizes Amazon Cognito to publish events to Amazon Pinpoint analytics.
+   *
+   * @see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-rolearn
+   */
+  readonly roleArn?: string;
+
+  /**
+   * If `UserDataShared` is `true` , Amazon Cognito includes user data in the events that it publishes to Amazon Pinpoint analytics.
+   *
+   * @see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-userdatashared
+   */
+  readonly userDataShared?: boolean;
+}
+
+/**
  * Options to create a UserPoolClient
  */
 export interface UserPoolClientOptions {
@@ -337,6 +385,13 @@ export interface UserPoolClientOptions {
    * @default false for new user pool clients
    */
   readonly enablePropagateAdditionalUserContextData?: boolean;
+
+  /**
+   * The user pool analytics configuration for collecting metrics and sending them to your Amazon Pinpoint campaign.
+   * @see https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools-pinpoint-integration.html
+   * @default - no value
+   */
+  readonly analyticsConfiguration?: AnalyticsConfigurationProperty;
 }
 
 /**
@@ -461,6 +516,7 @@ export class UserPoolClient extends Resource implements IUserPoolClient {
       writeAttributes: props.writeAttributes?.attributes(),
       enableTokenRevocation: props.enableTokenRevocation,
       enablePropagateAdditionalUserContextData: props.enablePropagateAdditionalUserContextData,
+      analyticsConfiguration: props.analyticsConfiguration,
     });
     this.configureAuthSessionValidity(resource, props);
     this.configureTokenValidity(resource, props);
